@@ -1,0 +1,27 @@
+server:
+  port: 8222  # Définit le port sur lequel l'API Gateway écoute (ici, 8222)
+
+spring:
+  application:
+    name: gateway-service
+  cloud:
+    gateway:
+      discovery:
+        locator:
+          enabled: true  # Active la découverte dynamique des services enregistrés dans Eureka
+
+      routes:
+        - id: internshipoffer-service  # Identifiant unique de la route pour internship-service
+          uri: lb://internshipoffer-service  # Utilise lb:// pour le load balancing via Eureka
+          predicates:
+            - Path=/api/v1/internships/**  # Toutes les requêtes vers "/api/v1/internships/**" seront redirigées vers internship-service
+
+      globalcors:  # Configuration des règles CORS (Cross-Origin Resource Sharing)
+        cors-configurations:
+          '[/**]':  # Appliquer cette configuration à toutes les routes
+            allowedOrigins: "http://localhost:4200"  # Autorise les requêtes venant de l'application Angular en localhost:4200
+            allowedMethods: "*"  # Autorise toutes les méthodes HTTP (GET, POST, PUT, DELETE, etc.)
+            allowedHeaders: "*"  # Autorise tous les headers HTTP
+            allowCredentials: true  # Autorise l'envoi de cookies et d'informations d'authentification
+
+
