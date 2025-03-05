@@ -1,9 +1,9 @@
 # GInternship - Internship Management System  
 
-🚀 **GInternship** est une application Web permettant de gérer les offres de stages et les candidatures des étudiants. Ce projet a été réalisé dans le cadre des cours à **Esprit School of Engineering**.
+🚀 **GInternship** cette gestion permet de gérer les offres de stages et les candidatures des étudiants. Ce projet a été réalisé dans le cadre des cours à **Esprit School of Engineering**.
 
 ## 📌 Description du projet  
-Cette application aide les entreprises à publier des offres et permet aux étudiants de postuler facilement. Elle fournit également un espace de gestion pour suivre les candidatures en temps réel.
+cette gestion aide les entreprises à publier des offres et permet aux étudiants de postuler facilement. Elle fournit également un espace de gestion pour suivre les candidatures en temps réel.
 
 ## 🔥 Fonctionnalités principales  
 - 📄 **Gestion des offres de stage** (Ajout, modification, suppression)  
@@ -28,4 +28,3 @@ Cette application aide les entreprises à publier des offres et permet aux étud
 - MySQL  
 - PostgreSQL (optionnel)  
 
-## 📂 Structure du projet  
