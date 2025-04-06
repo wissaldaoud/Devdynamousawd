@@ -11,9 +11,11 @@
 	<groupId>com.pi</groupId>
 	<artifactId>formation</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
+	<packaging>jar</packaging> <!-- ✅ Ajout indispensable -->
 	<name>trainingProgram</name>
 	<description>trainingProgram</description>
-	<url/>
+
+
 	<licenses>
 		<license/>
 	</licenses>

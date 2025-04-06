@@ -1,21 +1,31 @@
 server:
   port: 8222
+
 spring:
   cloud:
     gateway:
       discovery:
         locator:
           enabled: true
+
       routes:
         - id: formation-service
-          uri: lb:http://formation-SERVICE
+          uri: lb://FORMATION-SERVICE
           predicates:
             - Path=/api/v1/formation/**
+
+        - id: paiement-service
+          uri: lb://PAIEMENT-SERVICE
+          predicates:
+            - Path=/api/v1/payment/**
 
       globalcors:
         cors-configurations:
           '[/**]':
-            allowedOrigins: "http://localhost:4200"
-            allowedMethods: "*"
-            allowedHeaders: "*"
+            allowedOrigins:
+              - "http://localhost:4200"
+            allowedMethods:
+              - "*"
+            allowedHeaders:
+              - "*"
             allowCredentials: true
