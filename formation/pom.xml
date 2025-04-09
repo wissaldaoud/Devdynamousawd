@@ -51,6 +51,20 @@
 		</dependency>
 
 
+		<!-- Core (nécessaire pour créer un document PDF) -->
+		<dependency>
+			<groupId>com.itextpdf</groupId>
+			<artifactId>itext7-core</artifactId>
+			<version>8.0.1</version>
+			<type>pom</type>
+		</dependency>
+
+		<!-- Layout module (pour Paragraph, Table...) -->
+		<dependency>
+			<groupId>com.itextpdf</groupId>
+			<artifactId>layout</artifactId>
+			<version>8.0.1</version>
+		</dependency>
 
 
 		<dependency>

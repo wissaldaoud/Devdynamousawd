@@ -1,16 +1,19 @@
 package com.pi.trainingprogram.service;
 
+import com.itextpdf.kernel.pdf.PdfDocument;
+import com.itextpdf.kernel.pdf.PdfWriter;
+import com.itextpdf.layout.Document;
+import com.itextpdf.layout.element.Paragraph;
 import com.pi.trainingprogram.entities.TrainingProgram;
 import com.pi.trainingprogram.repository.TrainingProgramRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.AllArgsConstructor;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.List;
+import java.util.Random;
 
 @Service
 @AllArgsConstructor
@@ -23,7 +26,8 @@ public class TrainingProgramService {
     }
 
     public TrainingProgram getTrainingProgramById(int id) {
-        return trainingProgramRepository.findById(id).orElse(null);
+        return trainingProgramRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Formation introuvable"));
     }
 
     public TrainingProgram createTrainingProgram(TrainingProgram trainingProgram) {
@@ -35,15 +39,17 @@ public class TrainingProgramService {
             trainingProgram.setId(id);
             return trainingProgramRepository.save(trainingProgram);
         }
-        throw new EntityNotFoundException("Training Program not found");
+        throw new EntityNotFoundException("Formation introuvable");
     }
 
     public void deleteTrainingProgram(int id) {
         trainingProgramRepository.deleteById(id);
     }
+
     public List<TrainingProgram> searchTrainingPrograms(String keyword) {
         return trainingProgramRepository.findByTitleContainingIgnoreCaseOrDescriptionContainingIgnoreCase(keyword, keyword);
     }
+
     public List<TrainingProgram> getSortedPrograms(String sortBy) {
         return switch (sortBy) {
             case "price" -> trainingProgramRepository.findAllByOrderByPriceAsc();
@@ -51,15 +57,28 @@ public class TrainingProgramService {
             default -> trainingProgramRepository.findAll();
         };
     }
-    @GetMapping("/export/{id}")
-    public ResponseEntity<byte[]> exportTrainingProgramPdf(@PathVariable int id) throws IOException {
-        byte[] pdf = trainingProgramService.generatePdfForProgram(id);
-        return ResponseEntity.ok()
-                .header("Content-Disposition", "attachment; filename=training_" + id + ".pdf")
-                .header("Content-Type", "application/pdf")
-                .body(pdf);
+
+    public byte[] generatePdfForProgram(int id) throws IOException {
+        TrainingProgram program = getTrainingProgramById(id);
+
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        PdfWriter writer = new PdfWriter(out);
+        PdfDocument pdfDoc = new PdfDocument(writer);
+        Document doc = new Document(pdfDoc);
+
+        doc.add(new Paragraph("Fiche de la formation"));
+        doc.add(new Paragraph("Titre: " + program.getTitle()));
+        doc.add(new Paragraph("Description: " + program.getDescription()));
+        doc.add(new Paragraph("Durée: " + program.getDuration() + " jours"));
+        doc.add(new Paragraph("Prix: " + program.getPrice() + " €"));
+
+        doc.close();
+        return out.toByteArray();
     }
 
-
-
+    public TrainingProgram getRandomProgram() {
+        List<TrainingProgram> list = trainingProgramRepository.findAll();
+        if (list.isEmpty()) return null;
+        return list.get(new Random().nextInt(list.size()));
+    }
 }

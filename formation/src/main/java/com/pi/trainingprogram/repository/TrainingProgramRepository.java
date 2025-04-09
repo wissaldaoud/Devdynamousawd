@@ -9,5 +9,4 @@ public interface TrainingProgramRepository extends JpaRepository<TrainingProgram
     List<TrainingProgram> findByTitleContainingIgnoreCaseOrDescriptionContainingIgnoreCase(String title, String description);
     List<TrainingProgram> findAllByOrderByPriceAsc();
     List<TrainingProgram> findAllByOrderByDurationAsc();
-
 }

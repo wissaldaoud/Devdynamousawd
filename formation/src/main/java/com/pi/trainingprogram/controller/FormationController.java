@@ -1,14 +1,13 @@
 package com.pi.trainingprogram.controller;
 
-
-
 import com.pi.trainingprogram.entities.TrainingProgram;
 import com.pi.trainingprogram.service.TrainingProgramService;
 import lombok.AllArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
 import java.util.List;
-import java.util.Map;
 
 @CrossOrigin(origins = "http://localhost:4200")
 @RestController
@@ -42,13 +41,31 @@ public class FormationController {
     public void deleteTrainingProgram(@PathVariable int id) {
         trainingProgramService.deleteTrainingProgram(id);
     }
+
     @GetMapping("/search")
-    public List<TrainingProgram> searchTrainingPrograms(@RequestParam(required = false) String title,
-                                                        @RequestParam(required = false) Integer duration) {
-        return trainingProgramService.searchTrainingPrograms(title, duration);
+    public List<TrainingProgram> search(@RequestParam String keyword) {
+        return trainingProgramService.searchTrainingPrograms(keyword);
+    }
+
+    @GetMapping("/sort")
+    public List<TrainingProgram> sortBy(@RequestParam String sortBy) {
+        return trainingProgramService.getSortedPrograms(sortBy);
+    }
+
+
+    @GetMapping("/export/{id}")
+    public ResponseEntity<byte[]> exportTrainingProgramPdf(@PathVariable int id) throws IOException {
+        byte[] pdf = trainingProgramService.generatePdfForProgram(id);
+        return ResponseEntity.ok()
+                .header("Content-Disposition", "attachment; filename=training_" + id + ".pdf")
+                .header("Content-Type", "application/pdf")
+                .body(pdf);
     }
 
 
 
+    @GetMapping("/random")
+    public TrainingProgram recommendRandomProgram() {
+        return trainingProgramService.getRandomProgram();
+    }
 }
-
