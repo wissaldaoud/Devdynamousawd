@@ -3,6 +3,18 @@ spring:
     name: paiement-service
   config:
     import: optional:configserver:http://localhost:8888
+  mail:
+    host: sandbox.smtp.mailtrap.io
+    port: 2525
+    username: 485021a7af7963  # depuis ton image
+    password: 528009d6e9a806     # complète ici avec ton mot de passe complet
+    protocol: smtp
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
 
 eureka:
   client:

@@ -33,6 +33,28 @@ public class PaiementController {
 
         return ResponseEntity.ok(Map.of("url", sessionUrl));
     }
+    @GetMapping("/invoice")
+    public ResponseEntity<byte[]> getInvoice(@RequestParam int trainingProgramId, @RequestParam String userEmail) throws Exception {
+        byte[] pdf = paiementService.generateInvoice(trainingProgramId, userEmail);
+
+        return ResponseEntity.ok()
+                .header("Content-Disposition", "attachment; filename=facture.pdf")
+                .header("Content-Type", "application/pdf")
+                .body(pdf);
+    }
+    @PostMapping("/send-invoice")
+    public ResponseEntity<String> sendInvoiceByEmail(@RequestBody Map<String, Object> request) throws Exception {
+        int trainingProgramId = (int) request.get("trainingProgramId");
+        String userEmail = (String) request.get("userEmail");
+
+        paiementService.envoyerFactureParEmail(trainingProgramId, userEmail);
+
+        return ResponseEntity.ok("Facture envoyée avec succès à " + userEmail);
+    }
+
+
+
+
 
     // Optionnel : enregistrer un paiement
 

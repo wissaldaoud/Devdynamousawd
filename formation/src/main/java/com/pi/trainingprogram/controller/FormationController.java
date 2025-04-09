@@ -8,7 +8,9 @@ import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
+@CrossOrigin(origins = "http://localhost:4200")
 @RestController
 @RequestMapping("/api/v1/formation")
 @AllArgsConstructor
@@ -40,5 +42,13 @@ public class FormationController {
     public void deleteTrainingProgram(@PathVariable int id) {
         trainingProgramService.deleteTrainingProgram(id);
     }
+    @GetMapping("/search")
+    public List<TrainingProgram> searchTrainingPrograms(@RequestParam(required = false) String title,
+                                                        @RequestParam(required = false) Integer duration) {
+        return trainingProgramService.searchTrainingPrograms(title, duration);
+    }
+
+
+
 }
 
