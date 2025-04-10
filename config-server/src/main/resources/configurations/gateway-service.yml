@@ -1,5 +1,5 @@
 server:
-  port: 8222  # Définit le port sur lequel l'API Gateway écoute (ici, 8222)
+  port: 8222  # Port de l'API Gateway
 
 spring:
   application:
@@ -8,20 +8,22 @@ spring:
     gateway:
       discovery:
         locator:
-          enabled: true  # Active la découverte dynamique des services enregistrés dans Eureka
+          enabled: true  # Active la découverte dynamique via Eureka
 
       routes:
-        - id: internshipoffer-service  # Identifiant unique de la route pour internship-service
-          uri: lb://internshipoffer-service  # Utilise lb:// pour le load balancing via Eureka
+        - id: internshipoffer-service
+          uri: lb://internshipoffer-service
           predicates:
-            - Path=/api/v1/internships/**  # Toutes les requêtes vers "/api/v1/internships/**" seront redirigées vers internship-service
+            - Path=/api/v1/internships/**  # Pour les offres de stage
+        - id: internshipapplication-service
+          uri: lb://internshipoffer-service   # Même microservice, car les candidatures sont gérées ici
+          predicates:
+            - Path=/api/v1/internship-applications/**  # Pour les candidatures
 
-      globalcors:  # Configuration des règles CORS (Cross-Origin Resource Sharing)
+      globalcors:
         cors-configurations:
-          '[/**]':  # Appliquer cette configuration à toutes les routes
-            allowedOrigins: "http://localhost:4200"  # Autorise les requêtes venant de l'application Angular en localhost:4200
-            allowedMethods: "*"  # Autorise toutes les méthodes HTTP (GET, POST, PUT, DELETE, etc.)
-            allowedHeaders: "*"  # Autorise tous les headers HTTP
-            allowCredentials: true  # Autorise l'envoi de cookies et d'informations d'authentification
-
-
+          '[/**]':
+            allowedOrigins: "http://localhost:4200"
+            allowedMethods: "*"
+            allowedHeaders: "*"
+            allowCredentials: true

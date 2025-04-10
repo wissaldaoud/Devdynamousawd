@@ -4,7 +4,16 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="a01f42fc-408a-4e9a-a7f0-948ecfac9444" name="Changes" comment="" />
+    <list default="true" id="a01f42fc-408a-4e9a-a7f0-948ecfac9444" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/internshipoffer/src/main/java/com/example/internshipoffer/controller/InternshipApplicationController.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/internshipoffer/src/main/java/com/example/internshipoffer/repository/InternshipApplicationRepository.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/internshipoffer/src/main/java/com/example/internshipoffer/service/InternshipApplicationService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/config-server/src/main/resources/configurations/gateway-service.yml" beforeDir="false" afterPath="$PROJECT_DIR$/config-server/src/main/resources/configurations/gateway-service.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/internshipoffer/src/main/java/com/example/internshipoffer/controller/InternshipOfferController.java" beforeDir="false" afterPath="$PROJECT_DIR$/internshipoffer/src/main/java/com/example/internshipoffer/controller/InternshipOfferController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/internshipoffer/src/main/java/com/example/internshipoffer/entities/InternshipApplication.java" beforeDir="false" afterPath="$PROJECT_DIR$/internshipoffer/src/main/java/com/example/internshipoffer/entities/InternshipApplication.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/internshipoffer/src/main/java/com/example/internshipoffer/service/InternshipOfferService.java" beforeDir="false" afterPath="$PROJECT_DIR$/internshipoffer/src/main/java/com/example/internshipoffer/service/InternshipOfferService.java" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -18,6 +27,9 @@
         <option value="Class" />
       </list>
     </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="MarkdownSettingsMigration">
     <option name="stateVersion" value="1" />
@@ -45,13 +57,13 @@
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
     &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
     &quot;jdk.selected.JAVA_MODULE&quot;: &quot;17&quot;,
-    &quot;last_opened_file_path&quot;: &quot;C:/Users/DORSAF/IdeaProjects/GInternship/internshipoffer/src/main/resources&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/DORSAF/Downloads/Automation-Of-The-Internship-Process-main&quot;,
     &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
     &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
     &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
     &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
     &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;spring.configuration.checksum&quot;: &quot;58d5c7bbad19ffaeaba0dde8c96e73a0&quot;,
+    &quot;spring.configuration.checksum&quot;: &quot;42fe0f3de2b7e1d426d2c0f1696c8600&quot;,
     &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
 }</component>
@@ -120,11 +132,35 @@
       <workItem from="1741203839122" duration="188000" />
       <workItem from="1741207325131" duration="991000" />
       <workItem from="1741208330603" duration="6040000" />
-      <workItem from="1741215025285" duration="644000" />
+      <workItem from="1741215025285" duration="2069000" />
+      <workItem from="1741224513251" duration="623000" />
+      <workItem from="1741225622481" duration="28000" />
+      <workItem from="1741225740204" duration="352000" />
+      <workItem from="1741226434292" duration="1843000" />
+      <workItem from="1741730086078" duration="4309000" />
+      <workItem from="1743445530785" duration="593000" />
+      <workItem from="1743512681987" duration="8134000" />
+      <workItem from="1743773498291" duration="3845000" />
+      <workItem from="1743937285547" duration="6106000" />
+      <workItem from="1744039678519" duration="10212000" />
+      <workItem from="1744135035381" duration="3635000" />
+      <workItem from="1744143618479" duration="7286000" />
+      <workItem from="1744221318860" duration="11016000" />
     </task>
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
   </component>
 </project>
