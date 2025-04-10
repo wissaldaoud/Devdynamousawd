@@ -1,17 +1,82 @@
-# GInternship - Internship Management System  
+# 🎓 Microservice : OffresDeStage-Service
 
-🚀 **GInternship** cette gestion permet de gérer les offres de stages et les candidatures des étudiants. Ce projet a été réalisé dans le cadre des cours à **Esprit School of Engineering**.
+Bienvenue dans le microservice `OffresDeStage-Service-Service` du projet **DevDynamous**.  
+Ce service est dédié à la **gestion des offres de stages** et des **candidatures étudiantes**, avec envoi automatique d’e-mails de confirmation et génération de **statistiques**.
 
-## 📌 Description du projet  
-cette gestion aide les entreprises à publier des offres et permet aux étudiants de postuler facilement. Elle fournit également un espace de gestion pour suivre les candidatures en temps réel.
+---
 
-## 🔥 Fonctionnalités principales  
-- 📄 **Gestion des offres de stage** (Ajout, modification, suppression)  
-- 👨‍🎓 **Postulation des étudiants** aux offres  
-- ✅ **Validation et suivi des candidatures** par les entreprises  
-- 🔔 **Notifications automatiques** (Emails)  
-- 🔒 **Authentification sécurisée avec JWT**  
-- 📊 **Tableau de bord interactif**  
+## 🧱 Architecture Microservices
+
+```
+📦 GInternship/
+├── 📂 config-server/        → Configuration centralisée
+├── 📂 discovery/            → Registre Eureka
+├── 📂 gateway/              → API Gateway
+└── 📂 internshipoffer/      → Microservice de gestion des stages
+```
+
+---
+
+## 🚀 Fonctionnalités
+
+### 📌 Offres de Stage
+
+- `POST /api/v1/internshipOffers` : Créer une nouvelle offre
+- `GET /api/v1/internshipOffers` : Lister toutes les offres
+- `GET /api/v1/internshipOffers/{id}` : Obtenir une offre par ID
+- `PUT /api/v1/internshipOffers/{id}` : Modifier une offre
+- `DELETE /api/v1/internshipOffers/{id}` : Supprimer une offre
+
+### 📝 Candidatures
+
+- `POST /api/v1/applications` : Postuler à une offre
+- `GET /api/v1/applications` : Lister toutes les candidatures
+- `GET /api/v1/applications/byOffer/{offerId}` : Candidatures pour une offre
+- `DELETE /api/v1/applications/{id}` : Supprimer une candidature
+- `GET /api/v1/applications/status?userId=5&offerId=2` : Vérifier une candidature
+
+✅ **Email automatique** envoyé à l’étudiant après candidature.
+
+---
+
+## 📊 Statistiques
+
+- Nombre de candidatures par offre
+- Répartition par statut(à venir)
+- Statistiques temporelles
+- Export possible (à venir)
+
+---
+
+## 🖥️ Frontend Angular
+
+- Liste et détails des offres
+- Formulaire de candidature avec envoi de CV
+- Statistiques visuelles (graphiques)
+- Confirmation de candidature par email
+
+---
+
+## ⚙️ Stack technique
+
+- **Spring Boot 3**
+- **Spring Cloud Config / Eureka**
+- **MySQL / JPA / Hibernate**
+- **JavaMailSender** (service mail intégré)
+- **Swagger** pour la doc API
+- **Docker** (optionnel)
+- **Angular 16+** (frontend)
+
+---
+
+## 👨‍💻 Auteur
+
+Développé par **Riahi Dorsaf**  
+📧 Dorsaf.riahi@esprit.tn 
+📱 +216 95075025 
+🔗 [GitHub - DevDynamous](https://github.com/wissaldaoud/Devdynamousawd)
+
+> N'hésitez pas à ⭐ le projet ou contribuer via Pull Request 🙌
 
 ## 🛠️ Stack Technologique  
 ### 🎨 Frontend  
