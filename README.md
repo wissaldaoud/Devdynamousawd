@@ -77,19 +77,3 @@ Développé par **Riahi Dorsaf**
 🔗 [GitHub - DevDynamous](https://github.com/wissaldaoud/Devdynamousawd)
 
 > N'hésitez pas à ⭐ le projet ou contribuer via Pull Request 🙌
-
-## 🛠️ Stack Technologique  
-### 🎨 Frontend  
-- Angular  
-- TypeScript  
-- Bootstrap  
-
-### 🖥️ Backend  
-- Spring Boot  
-- Spring Security (JWT)  
-- Hibernate / JPA  
-
-### 🗄️ Base de données  
-- MySQL  
-- PostgreSQL (optionnel)  
-
