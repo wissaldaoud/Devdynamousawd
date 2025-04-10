@@ -62,3 +62,5 @@ Développé par **Slim-Fady Hanafi**, dans le cadre d’un projet collaboratif D
 ---
 
 ## 📁 Arborescence principale (backend)
+
+hackathon/ ├── controller/ │ ├── HackathonController.java │ └── HackathonParticipationController.java ├── entities/ │ └── Hackathon.java, HackathonParticipation.java, etc. ├── dtos/ ├── service/ ├── repository/ └── resources/
