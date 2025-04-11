@@ -25,9 +25,7 @@ public class Module {
     @JoinColumn(name = "training_program_id", nullable = false)
     private TrainingProgram trainingProgram;
 
-    @OneToMany(mappedBy = "module", cascade = CascadeType.ALL)
-    private List<Content> contents;
 
-    @OneToOne(mappedBy = "module", cascade = CascadeType.ALL)
-    private Quiz quiz;
+
+;
 }

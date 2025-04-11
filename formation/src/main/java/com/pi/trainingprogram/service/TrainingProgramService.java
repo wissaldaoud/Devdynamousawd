@@ -1,8 +1,10 @@
 package com.pi.trainingprogram.service;
 
+import com.itextpdf.io.image.ImageDataFactory;
 import com.itextpdf.kernel.pdf.PdfDocument;
 import com.itextpdf.kernel.pdf.PdfWriter;
 import com.itextpdf.layout.Document;
+import com.itextpdf.layout.element.Image;
 import com.itextpdf.layout.element.Paragraph;
 import com.pi.trainingprogram.entities.TrainingProgram;
 import com.pi.trainingprogram.repository.TrainingProgramRepository;
@@ -13,6 +15,10 @@ import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.pdmodel.PDPageContentStream;
 import org.apache.pdfbox.pdmodel.font.PDType1Font;
+import org.jfree.chart.ChartFactory;
+import org.jfree.chart.ChartUtils;
+import org.jfree.chart.JFreeChart;
+import org.jfree.data.general.DefaultPieDataset;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
@@ -30,6 +36,7 @@ public class TrainingProgramService {
     @Autowired
     private MailService mailService;
     private final TrainingProgramRepository trainingProgramRepository;
+
 
     public List<TrainingProgram> getAllTrainingPrograms() {
         return trainingProgramRepository.findAll();
@@ -56,9 +63,7 @@ public class TrainingProgramService {
         trainingProgramRepository.deleteById(id);
     }
 
-    public List<TrainingProgram> searchTrainingPrograms(String keyword) {
-        return trainingProgramRepository.findByTitleContainingIgnoreCaseOrDescriptionContainingIgnoreCase(keyword, keyword);
-    }
+
 
     public List<TrainingProgram> getSortedPrograms(String sortBy) {
         return switch (sortBy) {
@@ -86,11 +91,7 @@ public class TrainingProgramService {
         return out.toByteArray();
     }
 
-    public TrainingProgram getRandomProgram() {
-        List<TrainingProgram> list = trainingProgramRepository.findAll();
-        if (list.isEmpty()) return null;
-        return list.get(new Random().nextInt(list.size()));
-    }
+
     public Map<String, Object> getStatistics() {
         List<TrainingProgram> all = trainingProgramRepository.findAll();
         Map<String, Object> stats = new HashMap<>();
@@ -168,12 +169,7 @@ public class TrainingProgramService {
 
 
 
-    public List<TrainingProgram> recommendByInterest(String interest) {
-        System.out.println(">>> Intérêt reçu : " + interest);
-        List<TrainingProgram> list = trainingProgramRepository.findByTitleContainingIgnoreCaseOrDescriptionContainingIgnoreCase(interest, interest);
-        System.out.println(">>> Résultat trouvé : " + list.size() + " formations");
-        return list;
-    }
+
     public byte[] generateCertificateForUser(int programId, String userName) throws IOException {
         TrainingProgram program = getTrainingProgramById(programId);
         ByteArrayOutputStream out = new ByteArrayOutputStream();
@@ -222,89 +218,64 @@ public class TrainingProgramService {
 
 
 
-    public byte[] exportProgramsByCategoryToPdf(String category) throws IOException {
-        List<TrainingProgram> programs = trainingProgramRepository.findByCategoryIgnoreCase(category);
 
-        if (programs.isEmpty()) {
-            throw new IllegalArgumentException("Aucune formation trouvée dans la catégorie : " + category);
-        }
+
+
+
+
+
+
+    public byte[] generatePieChartByCategory() throws IOException {
+        Map<String, Long> stats = countByCategory();
+        DefaultPieDataset<String> dataset = new DefaultPieDataset<>();
+
+        stats.forEach(dataset::setValue);
+
+        JFreeChart chart = ChartFactory.createPieChart(
+                "Répartition des formations par catégorie",
+                dataset,
+                true, true, false);
 
         ByteArrayOutputStream out = new ByteArrayOutputStream();
-        PdfWriter writer = new PdfWriter(out);
+        ChartUtils.writeChartAsPNG(out, chart, 600, 400);
+        return out.toByteArray();
+    }
+    public byte[] generatePieChartPdfByCategory() throws IOException {
+        Map<String, Long> stats = countByCategory();
+
+        // Création du dataset
+        DefaultPieDataset<String> dataset = new DefaultPieDataset<>();
+        stats.forEach(dataset::setValue);
+
+        // Création du diagramme
+        JFreeChart chart = ChartFactory.createPieChart(
+                "Répartition des formations par catégorie",
+                dataset,
+                true, true, false);
+
+        // Générer l'image du diagramme
+        ByteArrayOutputStream chartOut = new ByteArrayOutputStream();
+        ChartUtils.writeChartAsPNG(chartOut, chart, 500, 400);
+        byte[] chartImage = chartOut.toByteArray();
+
+        // Générer le PDF contenant l'image
+        ByteArrayOutputStream pdfOut = new ByteArrayOutputStream();
+        PdfWriter writer = new PdfWriter(pdfOut);
         PdfDocument pdfDoc = new PdfDocument(writer);
-        Document doc = new Document(pdfDoc);
+        Document document = new Document(pdfDoc);
 
-        doc.add(new Paragraph("📘 Formations - Catégorie : " + category).setBold().setFontSize(16));
-        doc.add(new Paragraph("Nombre de formations : " + programs.size()).setFontSize(12));
+        Image chartImg = new Image(ImageDataFactory.create(chartImage));
+        document.add(chartImg);
 
-        for (TrainingProgram p : programs) {
-            doc.add(new Paragraph("--------------------------------"));
-            doc.add(new Paragraph("Titre : " + p.getTitle()));
-            doc.add(new Paragraph("Description : " + p.getDescription()));
-            doc.add(new Paragraph("Durée : " + p.getDuration() + " h"));
-            doc.add(new Paragraph("Prix : " + p.getPrice() + " " + p.getCurrency()));
-            doc.add(new Paragraph(""));
-        }
-
-        doc.close();
-        return out.toByteArray();
+        document.close();
+        return pdfOut.toByteArray();
+    }
+    public List<TrainingProgram> searchByTitle(String keyword) {
+        return trainingProgramRepository.findByTitleContainingIgnoreCase(keyword);
     }
 
-    public byte[] exportProgramsByCategoryToExcel(String category) throws IOException {
-        List<TrainingProgram> programs = trainingProgramRepository.findByCategoryIgnoreCase(category);
 
-        if (programs.isEmpty()) {
-            throw new IllegalArgumentException("Aucune formation trouvée dans la catégorie : " + category);
-        }
 
-        Workbook workbook = new XSSFWorkbook();
-        Sheet sheet = workbook.createSheet("Formations - " + category);
-
-        // En-têtes
-        Row header = sheet.createRow(0);
-        String[] columns = {"ID", "Titre", "Description", "Durée", "Prix", "Devise", "Catégorie"};
-        for (int i = 0; i < columns.length; i++) {
-            Cell cell = header.createCell(i);
-            cell.setCellValue(columns[i]);
-        }
-
-        // Lignes
-        int rowIdx = 1;
-        for (TrainingProgram p : programs) {
-            Row row = sheet.createRow(rowIdx++);
-            row.createCell(0).setCellValue(p.getId());
-            row.createCell(1).setCellValue(p.getTitle());
-            row.createCell(2).setCellValue(p.getDescription());
-            row.createCell(3).setCellValue(p.getDuration());
-            row.createCell(4).setCellValue(p.getPrice());
-            row.createCell(5).setCellValue(p.getCurrency() != null ? p.getCurrency().name() : "");
-            row.createCell(6).setCellValue(p.getCategory());
-        }
-
-        ByteArrayOutputStream out = new ByteArrayOutputStream();
-        workbook.write(out);
-        workbook.close();
-        return out.toByteArray();
-    }
-    public void sendCertificateByEmail(int programId, String name, String email) throws IOException, MessagingException {
-        byte[] pdf = generateCertificateForUser(programId, name);
-        String subject = "🎓 Votre certificat de formation";
-        String body = "Bonjour " + name + ",\n\nVoici votre certificat en pièce jointe.\n\nMerci pour votre participation.";
-        mailService.sendCertificate(email, subject, body, pdf, "certificat_" + name + ".pdf");
-    }
-    public String exportAllProgramsToCsv() {
-        List<TrainingProgram> programs = getAllTrainingPrograms();
-        StringBuilder csvBuilder = new StringBuilder();
-        csvBuilder.append("ID,Title,Description,Duration,Price\n");
-        for (TrainingProgram program : programs) {
-            csvBuilder.append(program.getId()).append(",")
-                    .append(program.getTitle()).append(",")
-                    .append(program.getDescription()).append(",")
-                    .append(program.getDuration()).append(",")
-                    .append(program.getPrice()).append("\n");
-        }
-        return csvBuilder.toString();
-    }
 
 
 

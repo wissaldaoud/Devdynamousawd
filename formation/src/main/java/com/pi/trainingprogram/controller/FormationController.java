@@ -45,10 +45,7 @@ public class FormationController {
         trainingProgramService.deleteTrainingProgram(id);
     }
 
-    @GetMapping("/search")
-    public List<TrainingProgram> search(@RequestParam String keyword) {
-        return trainingProgramService.searchTrainingPrograms(keyword);
-    }
+
 
     @GetMapping("/sort")
     public List<TrainingProgram> sortBy(@RequestParam String sortBy) {
@@ -67,10 +64,7 @@ public class FormationController {
 
 
 
-    @GetMapping("/random")
-    public TrainingProgram recommendRandomProgram() {
-        return trainingProgramService.getRandomProgram();
-    }
+
 
     @GetMapping("/stats")
     public ResponseEntity<?> getStats() {
@@ -94,16 +88,13 @@ public class FormationController {
 
 
 
+
     @GetMapping("/chatbot")
     public ResponseEntity<String> chatbot(@RequestParam(name = "question") String question) {
         String response = trainingProgramService.faqBot(question);
         return ResponseEntity.ok(response);
     }
-    @GetMapping("/recommend-by-interest")
-    public ResponseEntity<List<TrainingProgram>> recommendByInterest(@RequestParam("interest") String interest) {
-        System.out.println(">>> Contrôleur déclenché avec paramètre : " + interest);
-        return ResponseEntity.ok(trainingProgramService.recommendByInterest(interest));
-    }
+
 
     @GetMapping("/{id}/generate-certificate")
     public ResponseEntity<byte[]> generateCertificate(
@@ -131,43 +122,34 @@ public class FormationController {
 
 
 
-    @GetMapping("/export-category")
-    public ResponseEntity<byte[]> exportCategoryPdf(@RequestParam String category) throws IOException {
-        byte[] pdf = trainingProgramService.exportProgramsByCategoryToPdf(category);
+
+
+
+
+
+
+    @GetMapping("/chart/pie-category")
+    public ResponseEntity<byte[]> getPieChartByCategory() throws IOException {
+        byte[] image = trainingProgramService.generatePieChartByCategory();
         return ResponseEntity.ok()
-                .header("Content-Disposition", "attachment; filename=formations_" + category + ".pdf")
+                .header("Content-Disposition", "attachment; filename=chart.png")
+                .header("Content-Type", "image/png")
+                .body(image);
+    }
+    @GetMapping("/chart/pdf-category")
+    public ResponseEntity<byte[]> getPieChartPdfByCategory() throws IOException {
+        byte[] pdf = trainingProgramService.generatePieChartPdfByCategory();
+        return ResponseEntity.ok()
+                .header("Content-Disposition", "attachment; filename=chart_category.pdf")
                 .header("Content-Type", "application/pdf")
                 .body(pdf);
     }
-    @GetMapping("/export-category-excel")
-    public ResponseEntity<?> exportCategoryExcel(@RequestParam String category) {
-        try {
-            byte[] excel = trainingProgramService.exportProgramsByCategoryToExcel(category);
-            return ResponseEntity.ok()
-                    .header("Content-Disposition", "attachment; filename=formations_" + category + ".xlsx")
-                    .header("Content-Type", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
-                    .body(excel);
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().body("⚠️ Erreur : " + e.getMessage());
-        }
+    @GetMapping("/search-title")
+    public ResponseEntity<List<TrainingProgram>> searchByTitle(@RequestParam String keyword) {
+        return ResponseEntity.ok(trainingProgramService.searchByTitle(keyword));
     }
-    @GetMapping("/{id}/send-certificate")
-    public ResponseEntity<String> sendCertificateByEmail(
-            @PathVariable int id,
-            @RequestParam String name,
-            @RequestParam String email
-    ) throws IOException, MessagingException {
-        trainingProgramService.sendCertificateByEmail(id, name, email);
-        return ResponseEntity.ok("📧 Certificat envoyé à " + email);
-    }
-    @GetMapping("/export-csv")
-    public ResponseEntity<byte[]> exportAllProgramsCsv() {
-        String csvContent = trainingProgramService.exportAllProgramsToCsv();
-        return ResponseEntity.ok()
-                .header("Content-Disposition", "attachment; filename=formations.csv")
-                .header("Content-Type", "text/csv")
-                .body(csvContent.getBytes(StandardCharsets.UTF_8));
-    }
+
+
 
 
 
