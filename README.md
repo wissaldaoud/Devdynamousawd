@@ -70,7 +70,7 @@ Ce service est dédié à la **gestion des offres de stages** et des **candidatu
 - **MySQL / JPA / Hibernate**
 - **JavaMailSender** (service mail intégré)
 - **Swagger** pour la doc API
-- **Docker** (optionnel)
+- **Docker** (à venir)
 - **Angular 16+** (frontend)
 
 ---
