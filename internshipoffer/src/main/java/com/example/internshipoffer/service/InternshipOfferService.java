@@ -7,49 +7,48 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-/**
- * Service gérant la logique métier des offres de stage.
- * Fournit des méthodes pour récupérer, créer, mettre à jour et supprimer des offres de stage.
- */
 @Service
 public class InternshipOfferService {
 
     @Autowired
     private InternshipOfferRepository internshipOfferRepository;
 
-    /**
-     * Récupère la liste de toutes les offres de stage.
-     * @return Une liste d'offres de stage.
-     */
+    @Autowired
+    private MailService mailService;
+
     public List<InternshipOffer> getAllOffers() {
         return internshipOfferRepository.findAll();
     }
 
-    /**
-     * Récupère une offre de stage par son identifiant.
-     * @param id L'ID de l'offre.
-     * @return L'offre de stage correspondante ou lance une RuntimeException si l'offre n'est pas trouvée.
-     */
     public InternshipOffer getOfferById(Integer id) {
         return internshipOfferRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Internship offer not found with id " + id));
     }
 
-    /**
-     * Crée une nouvelle offre de stage.
-     * @param offer L'offre de stage à créer.
-     * @return L'offre de stage créée.
-     */
     public InternshipOffer createOffer(InternshipOffer offer) {
-        return internshipOfferRepository.save(offer);
+        InternshipOffer savedOffer = internshipOfferRepository.save(offer);
+
+        // 📨 Envoi de mail après création
+        String to = "dorsafriahi6@gmail.com"; // Remplace par l'adresse réelle du RH
+        String subject = "Nouvelle Offre de Stage - " + savedOffer.getTitle();
+        String text = "Bonjour,\n\nUne nouvelle offre de stage vient d'être créée avec les détails suivants :\n\n" +
+                "🔹 Titre : " + savedOffer.getTitle() + "\n" +
+                "📄 Description : " + savedOffer.getDescription() + "\n" +
+                "📍 Lieu : " + savedOffer.getLocation() + "\n" +
+                "🧠 Compétences requises : " + savedOffer.getRequiredSkills() + "\n" +
+                "👤 Encadrant : " + savedOffer.getSupervisorName() + "\n" +
+                "📅 Date de début : " + savedOffer.getStartDate() + "\n" +
+                "📅 Date de fin : " + savedOffer.getEndDate() + "\n" +
+                "🕒 Deadline de candidature : " + savedOffer.getApplicationDeadline() + "\n" +
+                "💶 Gratification : " + (savedOffer.getStipend() != null ? savedOffer.getStipend() + "€" : "Non précisé") + "\n" +
+                "✅ Disponibilité : " + savedOffer.getAvailability() + "\n\n" +
+                "Merci de consulter la plateforme pour plus de détails.";
+
+        mailService.sendEmail(to, subject, text);
+
+        return savedOffer;
     }
 
-    /**
-     * Met à jour une offre de stage existante.
-     * @param id L'ID de l'offre à mettre à jour.
-     * @param updatedOffer L'objet contenant les nouvelles valeurs.
-     * @return L'offre de stage mise à jour.
-     */
     public InternshipOffer updateOffer(Integer id, InternshipOffer updatedOffer) {
         InternshipOffer existingOffer = getOfferById(id);
         existingOffer.setTitle(updatedOffer.getTitle());
@@ -69,10 +68,6 @@ public class InternshipOfferService {
         return internshipOfferRepository.save(existingOffer);
     }
 
-    /**
-     * Supprime une offre de stage par son ID.
-     * @param id L'ID de l'offre à supprimer.
-     */
     public void deleteOffer(Integer id) {
         InternshipOffer offer = getOfferById(id);
         internshipOfferRepository.delete(offer);

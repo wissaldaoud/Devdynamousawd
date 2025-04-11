@@ -5,14 +5,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="a01f42fc-408a-4e9a-a7f0-948ecfac9444" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/internshipoffer/src/main/java/com/example/internshipoffer/controller/InternshipApplicationController.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/internshipoffer/src/main/java/com/example/internshipoffer/repository/InternshipApplicationRepository.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/internshipoffer/src/main/java/com/example/internshipoffer/service/InternshipApplicationService.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/config-server/src/main/resources/configurations/gateway-service.yml" beforeDir="false" afterPath="$PROJECT_DIR$/config-server/src/main/resources/configurations/gateway-service.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/internshipoffer/src/main/java/com/example/internshipoffer/controller/InternshipOfferController.java" beforeDir="false" afterPath="$PROJECT_DIR$/internshipoffer/src/main/java/com/example/internshipoffer/controller/InternshipOfferController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/internshipoffer/src/main/java/com/example/internshipoffer/entities/InternshipApplication.java" beforeDir="false" afterPath="$PROJECT_DIR$/internshipoffer/src/main/java/com/example/internshipoffer/entities/InternshipApplication.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/internshipoffer/src/main/java/com/example/internshipoffer/service/InternshipOfferService.java" beforeDir="false" afterPath="$PROJECT_DIR$/internshipoffer/src/main/java/com/example/internshipoffer/service/InternshipOfferService.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -47,26 +40,27 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;RequestMappingsPanelOrder0&quot;: &quot;0&quot;,
-    &quot;RequestMappingsPanelOrder1&quot;: &quot;1&quot;,
-    &quot;RequestMappingsPanelWidth0&quot;: &quot;75&quot;,
-    &quot;RequestMappingsPanelWidth1&quot;: &quot;75&quot;,
-    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
-    &quot;jdk.selected.JAVA_MODULE&quot;: &quot;17&quot;,
-    &quot;last_opened_file_path&quot;: &quot;C:/Users/DORSAF/Downloads/Automation-Of-The-Internship-Process-main&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;spring.configuration.checksum&quot;: &quot;42fe0f3de2b7e1d426d2c0f1696c8600&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RequestMappingsPanelOrder0": "0",
+    "RequestMappingsPanelOrder1": "1",
+    "RequestMappingsPanelWidth0": "75",
+    "RequestMappingsPanelWidth1": "75",
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
+    "WebServerToolWindowFactoryState": "false",
+    "jdk.selected.JAVA_MODULE": "17",
+    "last_opened_file_path": "C:/Users/DORSAF/IdeaProjects/Devdynamousawd-OffresDeStage_spring",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "spring.configuration.checksum": "42fe0f3de2b7e1d426d2c0f1696c8600",
+    "vue.rearranger.settings.migration": "true"
   }
-}</component>
+}]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="C:\Users\DORSAF\IdeaProjects\GInternship\internshipoffer\src\main\resources" />
@@ -145,7 +139,8 @@
       <workItem from="1744039678519" duration="10212000" />
       <workItem from="1744135035381" duration="3635000" />
       <workItem from="1744143618479" duration="7286000" />
-      <workItem from="1744221318860" duration="11016000" />
+      <workItem from="1744221318860" duration="14695000" />
+      <workItem from="1744366154907" duration="7599000" />
     </task>
     <servers />
   </component>
