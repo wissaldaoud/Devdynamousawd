@@ -1,6 +1,6 @@
 # 📚 Formation Management Microservice
 
-Ce projet Spring Boot permet de gérer des programmes de formation de manière complète, avec des fonctionnalités avancées telles que : export PDF/Excel/CSV, statistiques, chatbot, certificat PDF, envoi d’email via Mailtrap, et génération de graphique (camembert) en PDF et image.
+Ce projet Spring Boot permet de gérer des programmes de formation de manière complète, avec des fonctionnalités avancées telles que : export PDF, statistiques,  certificat PDF, et génération de graphique ( en PDF et image.)
 
 ---
 
