@@ -21,6 +21,9 @@ public class TrainingProgram {
     private int duration;
     private String prerequisites;
     private String objectives;
+    @Column(nullable = true)
+    private String category;
+
     private double price;
 
     @Enumerated(EnumType.STRING)

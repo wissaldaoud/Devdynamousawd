@@ -1,8 +1,21 @@
 spring:
   application:
-    name: formation-service
+    name: FORMATION-SERVICE
+
   config:
     import: optional:configserver:http://localhost:8888
+
+  mail:
+    host: smtp.mailtrap.io
+    port: 2525
+    username: 485021a7af7963
+    password:  528009d6e9a806
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
 
 eureka:
   client:
