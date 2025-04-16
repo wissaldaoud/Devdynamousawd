@@ -34,5 +34,42 @@ Ce microservice assure la gestion complète des hackathons : création, inscript
 - Marquer une publication comme "meilleur post" pour un hackathon : `POST /api/v1/hackathons/{id}/best-post/{postId}`
 - Voir les meilleurs posts : `GET /api/v1/hackathons/{id}/best-post`
 
+---
 
+## 🖥️ Frontend (Angular)
+L’interface utilisateur permet :
+- Visualisation des hackathons
+- Participation / désinscription à un hackathon
+- Affichage des meilleurs posts liés à chaque événement
+- Consultation des statistiques et du nombre de participants
+
+---
+
+## ⚙️ Technologies utilisées
+- ✅ Spring Boot 3.x
+- ✅ Angular 16+
+- ✅ MySQL / JPA / Hibernate
+- ✅ Spring Cloud : Eureka Discovery, Config Server
+- ✅ Docker (conteneurisation des microservices)
+- ✅ Architecture RESTful
+- ✅ Lombok
+
+---
+
+## 👨‍💻 Auteur de ce module
+Développé par **Slim-Fady Hanafi**, dans le cadre d’un projet collaboratif DevDynamous 🎯.
+
+---
+
+## 📁 Arborescence principale (backend)
+
+hackathon/ ├── controller/ │ ├── HackathonController.java │ └── HackathonParticipationController.java ├── entities/ │ └── Hackathon.java, HackathonParticipation.java, etc. ├── dtos/ ├── service/ ├── repository/ └── resources/
+
+
+---
+
+## 📬 Contact
+Pour toute question ou contribution :  
+📧 slimfady.hanafi@yahoo.fr  
+🌍 [GitHub - DevDynamous](https://github.com/wissaldaoud/Devdynamousawd)
 
