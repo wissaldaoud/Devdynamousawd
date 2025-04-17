@@ -1,0 +1,62 @@
+HELP.md
+target/
+!.mvn/wrapper/maven-wrapper.jar
+!**/src/main/**/target/
+!**/src/test/**/target/
+
+### STS ###
+.apt_generated
+.classpath
+.factorypath
+.project
+.settings
+.springBeans
+.sts4-cache
+
+### IntelliJ IDEA ###
+.idea
+*.iws
+*.iml
+*.ipr
+
+### NetBeans ###
+/nbproject/private/
+/nbbuild/
+/dist/
+/nbdist/
+/.nb-gradle/
+build/
+!**/src/main/**/build/
+!**/src/test/**/build/
+
+### VS Code ###
+.vscode/
+
+### Add these new security-critical entries ###
+# Secrets and Environment
+application.properties  # Exclude entire file if it contains secrets
+!.env.example           # Keep example env file if needed
+.env                    # Exclude environment files
+.env.local
+.env.*.local
+
+# Logs and temp files
+*.log
+logs/
+temp/
+
+# Sensitive files
+*.jks
+*.keystore
+*.truststore
+
+# Application-specific
+*.war
+*.jar
+
+# OS metadata
+.DS_Store
+Thumbs.db
+
+# Local configuration
+config/local*.properties
