@@ -1,0 +1,39 @@
+server:
+  port: 8222  # Port de l'API Gateway
+
+spring:
+  application:
+    name: gateway-service
+
+  cloud:
+    gateway:
+      # découverte dynamique via Eureka
+      discovery:
+        locator:
+          enabled: true
+
+      # vos routes
+      routes:
+        - id: cours-service
+          uri: lb://cours-service
+          predicates:
+            - Path=/api/v1/cours/**
+
+    # configuration Eureka pour que la gateway s'enregistre
+    eureka:
+      client:
+        # URL du serveur Eureka (port 8761 par défaut)
+        service-url:
+          defaultZone: http://localhost:8761/eureka/
+        # (optionnel) activer l'enregistrement et la récupération automatique
+        register-with-eureka: true
+        fetch-registry: true
+
+# CORS global
+globalcors:
+  cors-configurations:
+    '[/**]':
+      allowedOrigins: "http://localhost:4200"
+      allowedMethods: "*"
+      allowedHeaders: "*"
+      allowCredentials: true
