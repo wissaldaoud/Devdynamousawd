@@ -1,0 +1,62 @@
+{
+  "n_clusters": 3,
+  "centroids": [
+    [
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0
+    ],
+    [
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0
+    ],
+    [
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0
+    ]
+  ],
+  "feature_names": [
+    "paid",
+    "verified",
+    "specialty_Data Science",
+    "specialty_Finance",
+    "specialty_Informatique",
+    "specialty_Marketing",
+    "specialty_Math\u00e9matiques",
+    "sector_Finance",
+    "sector_Sant\u00e9",
+    "sector_Technologie",
+    "sector_\u00c9ducation",
+    "sector_\u00c9nergie"
+  ],
+  "inertia": 0.0
+}

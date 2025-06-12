@@ -33,11 +33,19 @@ public class JwtRequestFilter extends OncePerRequestFilter {
 
     // List of paths that should be excluded from JWT authentication
     private final List<String> publicPaths = Arrays.asList(
-            "/api/auth/**",
-            "/api/public/**",
-            "/swagger-ui/**",
-            "/v3/api-docs/**"
-    );
+            "/api/auth/**",              // Authentication endpoints
+            "/api/password/**",// Password reset endpoints
+            "/api/users/createUser",     // Public user creation
+            "/api/users/getAllUsers",    // Public get all users
+            "/api/swagger-ui/**",        // Swagger UI
+            "/api/v3/api-docs/**",       // OpenAPI docs
+            "/api/swagger-resources/**", // Swagger resources
+            "/api/webjars/**",           // WebJars for Swagger
+            "/swagger-ui/**",            // Additional Swagger paths
+            "/v3/api-docs/**",           // Additional OpenAPI paths
+            "/swagger-resources/**",     // Additional Swagger resources
+            "/webjars/**"                // Additional WebJars
+            );
 
     @Autowired
     public JwtRequestFilter(JwtUtil jwtUtil, SecurityUserService securityUserService) {
@@ -47,9 +55,21 @@ public class JwtRequestFilter extends OncePerRequestFilter {
 
     @Override
     protected boolean shouldNotFilter(HttpServletRequest request) {
-        String path = request.getServletPath();
-        return publicPaths.stream()
-                .anyMatch(pattern -> pathMatcher.match(pattern, path));
+        String path = request.getRequestURI(); // Use getRequestURI() instead of getServletPath()
+
+        logger.debug("Checking if path should be filtered: {}", path);
+
+        boolean shouldSkip = publicPaths.stream()
+                .anyMatch(pattern -> {
+                    boolean matches = pathMatcher.match(pattern, path);
+                    if (matches) {
+                        logger.debug("Path {} matches public pattern {}", path, pattern);
+                    }
+                    return matches;
+                });
+
+        logger.debug("Should skip JWT filter for path {}: {}", path, shouldSkip);
+        return shouldSkip;
     }
 
     @Override
@@ -57,6 +77,8 @@ public class JwtRequestFilter extends OncePerRequestFilter {
                                     HttpServletResponse response,
                                     FilterChain chain)
             throws ServletException, IOException {
+
+        logger.debug("Processing JWT filter for path: {}", request.getRequestURI());
 
         try {
             // Extract and process the JWT token

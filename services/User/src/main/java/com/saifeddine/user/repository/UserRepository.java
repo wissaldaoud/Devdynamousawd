@@ -16,4 +16,6 @@ public interface UserRepository extends JpaRepository<User, Long> {
     Optional<User> findByUserName(String userName);
     Optional<User> findByEmail(String email);
     List<User> findByRequestedRoleIsNotNull();
+    // Trouver les utilisateurs par leur cluster
+    List<User> findByCluster(Integer cluster);
 }

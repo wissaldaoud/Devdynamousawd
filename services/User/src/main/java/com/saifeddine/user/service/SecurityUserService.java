@@ -11,6 +11,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Optional;
@@ -45,7 +46,16 @@ public class SecurityUserService implements UserDetailsService {
         );
     }
 
-    private Collection<? extends GrantedAuthority> getAuthorities(Role role) {
-        return Collections.singletonList(new SimpleGrantedAuthority("ROLE_" + role.name()));
+    // Fixed getAuthorities method - make sure this method exists and is correct
+    private Collection<GrantedAuthority> getAuthorities(Role role) {
+        Collection<GrantedAuthority> authorities = new ArrayList<>();
+
+        // Add ROLE_ prefix to match your security configuration
+        authorities.add(new SimpleGrantedAuthority("ROLE_" + role.name()));
+
+        // Debug logging to see what authority is being created
+        System.out.println("Creating authority: ROLE_" + role.name());
+
+        return authorities;
     }
 }

@@ -68,9 +68,12 @@ public class User implements UserDetails {
 
     private String businessCode;
     private String taxId;
+    private boolean profileCompleted = false;
 
     // Manual Getters
     public Long getId() { return id; }
+    public boolean getProfileCompleted() { return profileCompleted; }
+    public void setProfileCompleted(boolean profileCompleted) { this.profileCompleted = profileCompleted; }
     public String getUserName() { return userName; }
     public String getPassword() { return password; }
     public String getEmail() { return email; }
@@ -103,11 +106,20 @@ public class User implements UserDetails {
     public void setTaxId(String taxId) { this.taxId = taxId; }
     public void setPhoneNumber(String phoneNumber) {this.phoneNumber = phoneNumber;}
 
+    private Integer cluster;
+
+    // Add getter/setter
+    public Integer getCluster() { return cluster; }
+    public void setCluster(Integer cluster) { this.cluster = cluster; }
 
     @Transient
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return Collections.singletonList(new SimpleGrantedAuthority("ROLE_" + role.name()));
+    }
+
+    public boolean isProfileCompleted() {
+        return profileCompleted;
     }
 
     @Transient

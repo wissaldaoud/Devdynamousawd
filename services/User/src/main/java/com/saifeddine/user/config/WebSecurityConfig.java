@@ -48,10 +48,22 @@ public class WebSecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .authorizeHttpRequests(auth -> auth
+                        // Your @RequestMapping("/password") becomes accessible at /api/password/**
+                        // Add "/api" prefix to all request matchers
+                        .requestMatchers("/password/**").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/password/forgot-password").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/password/reset-password").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/password/validate-reset-token").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/password/reset-token-info").permitAll()
+                        // Allow all OPTIONS requests for CORS preflight
+                        .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
+
                         // Public endpoints for authentication
                         .requestMatchers("/auth/login", "/auth/register").permitAll()
                         .requestMatchers("/users/createUser").permitAll()
                         .requestMatchers("/users/getAllUsers").permitAll()
+
+
 
                         // Swagger/OpenAPI documentation
                         .requestMatchers(
@@ -61,6 +73,9 @@ public class WebSecurityConfig {
                                 "/webjars/**",
                                 "/swagger-resources/**"
                         ).permitAll()
+
+                        // Profile Controller endpoints - CRITICAL FIX
+                        .requestMatchers("/profile/**").authenticated()
                         // User Controller endpoints (authenticated)
                         .requestMatchers(HttpMethod.GET, "/users/{id}").authenticated()
                         .requestMatchers(HttpMethod.GET, "/users/role/{role}").authenticated()
@@ -68,13 +83,25 @@ public class WebSecurityConfig {
                         .requestMatchers(HttpMethod.PUT, "/users/{userId}/profile").authenticated()
                         .requestMatchers(HttpMethod.PUT, "/users/{id}").authenticated()
                         .requestMatchers(HttpMethod.DELETE, "/users/{id}").authenticated()
+                        // Clustering Controller endpoints (admin only)
+                        .requestMatchers(HttpMethod.POST, "/clustering/update-all").hasAuthority("ROLE_ADMIN")
+                        .requestMatchers(HttpMethod.POST, "/clustering/assign/{userId}").hasAuthority("ROLE_ADMIN")
+                        .requestMatchers(HttpMethod.GET, "/clustering/users/{clusterId}").hasAuthority("ROLE_ADMIN")
+                        .requestMatchers(HttpMethod.GET, "/clustering/info/{clusterId}").hasAuthority("ROLE_ADMIN")
+                        .requestMatchers(HttpMethod.GET, "/clustering/distribution").hasAuthority("ROLE_ADMIN")
+                        // Recommendation Controller endpoints (authenticated with roles)
+                        .requestMatchers(HttpMethod.GET, "/recommendations/user/{userId}").hasAnyAuthority(
+                                "ROLE_ADMIN", "ROLE_STUDENT", "ROLE_TEACHER", "ROLE_ENTERPRISE", "ROLE_FREELANCER")
+                        .requestMatchers(HttpMethod.GET, "/recommendations/user/{userId}/role/{role}").hasAnyAuthority(
+                                "ROLE_ADMIN", "ROLE_STUDENT", "ROLE_TEACHER", "ROLE_ENTERPRISE", "ROLE_FREELANCER")
+                        .requestMatchers(HttpMethod.GET, "/recommendations/me").hasAnyAuthority(
+                                "ROLE_STUDENT", "ROLE_TEACHER", "ROLE_ENTERPRISE", "ROLE_FREELANCER")
                         // User operations
                         .requestMatchers(HttpMethod.GET, "/users/{id}").authenticated()
                         .requestMatchers(HttpMethod.POST, "/users/{userId}/request-role").authenticated()
                         .requestMatchers(HttpMethod.PUT, "/users/{userId}/profile").authenticated()
 
-                        // Profile Controller endpoints (authenticated)
-                        .requestMatchers("/profile/**").authenticated()
+
 
                         // Admin Controller endpoints (admin only)
                         .requestMatchers("/admin/**").hasAuthority("ROLE_ADMIN")

@@ -8,12 +8,15 @@ import com.saifeddine.user.model.Role;
 import com.saifeddine.user.model.User;
 import com.saifeddine.user.repository.UserRepository;
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -23,18 +26,23 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 @Service
 @AllArgsConstructor
 @Slf4j
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class UserService implements IUserService {
+    private static final Logger logger = LoggerFactory.getLogger(UserService.class);
     @Autowired
     private UserRepository userRepository;
     @Autowired
     private ModelMapper modelMapper;
     @Autowired
     private PasswordEncoder passwordEncoder;
+    @Autowired
+    private ClusteringService clusteringService;
 
 
 
@@ -127,13 +135,30 @@ public class UserService implements IUserService {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new EntityNotFoundException("User not found"));
 
+        // Update fields
+        updateFieldsFromDTO(user, profileDTO);
         // Update only provided fields
-        if(profileDTO.getPaid() != null) user.setPaid(profileDTO.getPaid());
-        if(profileDTO.getCv() != null) user.setCv(profileDTO.getCv());
-        // ... update all other fields similarly
-
-        validateRoleSpecificFields(user);
+        // Validate ONLY on initial profile completion
+        if (!user.isProfileCompleted()) {
+            validateRoleSpecificFields(user);
+            user.setProfileCompleted(true);
+        }
         return userRepository.save(user);
+    }
+    private void updateFieldsFromDTO(User user, ProfileUpdateDTO profileDTO) {
+        if (profileDTO.getPhoneNumber() != null)
+            user.setPhoneNumber(profileDTO.getPhoneNumber());
+
+        // Update student-specific fields only if provided
+        if (user.getRole() == Role.STUDENT) {
+            if (profileDTO.getPaid() != null) user.setPaid(profileDTO.getPaid());
+            if (profileDTO.getCv() != null) user.setCv(profileDTO.getCv());
+            if (profileDTO.getCompetence() != null)
+                user.setCompetence(profileDTO.getCompetence());
+            if (profileDTO.getSpecialty() != null)
+                user.setSpecialty(profileDTO.getSpecialty());
+        }
+        // ... other role-specific updates
     }
     public User updateUserRole(Long userId, RoleUpdateDTO roleUpdateDTO) {
         try {
@@ -174,8 +199,13 @@ public class UserService implements IUserService {
 
         if (user.getPaid() == null) missingFields.add("paid");
         if (isNullOrEmpty(user.getCv())) missingFields.add("cv");
-        if (isNullOrEmpty(user.getCompetence())) missingFields.add("competence");
-        if (isNullOrEmpty(user.getSpecialty())) missingFields.add("specialty");
+        // Only require competence/specialty on initial setup
+        if (!user.isProfileCompleted()) {
+            if (isNullOrEmpty(user.getCompetence()))
+                missingFields.add("competence");
+            if (isNullOrEmpty(user.getSpecialty()))
+                missingFields.add("specialty");
+        }
 
         if (!missingFields.isEmpty()) {
             throw new IllegalArgumentException("Student requires fields: " + missingFields);
@@ -314,6 +344,77 @@ public class UserService implements IUserService {
         return dto;
     }
 
+    /**
+     * Attribue un cluster à un utilisateur basé sur son profil
+     * @param user L'utilisateur à classifier
+     * @return L'utilisateur avec son cluster assigné
+     */
+    @Transactional
+    public User assignCluster(User user) {
+        int clusterId = clusteringService.predictCluster(user);
+        user.setCluster(clusterId);
+        return userRepository.save(user);
+    }
+    /**
+     * Met à jour le cluster de tous les utilisateurs dans la base de données
+     * @return Le nombre d'utilisateurs mis à jour
+     */
+    @Transactional
+    public int updateAllUserClusters() {
+        int count = 0;
+        List<User> users = userRepository.findAll();
+
+        for (User user : users) {
+            try {
+                int clusterId = clusteringService.predictCluster(user);
+                user.setCluster(clusterId);
+                userRepository.save(user);
+                count++;
+            } catch (Exception e) {
+                logger.error("Erreur lors de la mise à jour du cluster pour l'utilisateur ID: " + user.getId(), e);
+            }
+        }
+
+        return count;
+    }
+
+    /**
+     * Récupère les informations sur un cluster spécifique
+     * @param clusterId L'ID du cluster
+     * @return Map contenant les informations du cluster
+     */
+    public Map<String, Object> getClusterInfo(int clusterId) {
+        return clusteringService.getClusterInfo(clusterId);
+    }
+
+    /**
+     * Récupère tous les utilisateurs appartenant à un cluster spécifique
+     * @param clusterId L'ID du cluster
+     * @return Liste des utilisateurs dans ce cluster
+     */
+    public List<User> getUsersByCluster(Integer clusterId) {
+        return userRepository.findByCluster(clusterId);
+    }
+
+    /**
+     * Récupère un utilisateur par son ID et ajoute des informations sur son cluster
+     * @param userId L'ID de l'utilisateur
+     * @return L'utilisateur avec des informations sur son cluster
+     */
+    public Optional<User> getUserWithClusterInfo(Long userId) {
+        Optional<User> userOpt = userRepository.findById(userId);
+
+        if (userOpt.isPresent()) {
+            User user = userOpt.get();
+
+            // Si l'utilisateur n'a pas encore de cluster, on lui en attribue un
+            if (user.getCluster() == null) {
+                user = assignCluster(user);
+            }
+        }
+
+        return userOpt;
+    }
 
 
 }
