@@ -194,6 +194,28 @@
 
 	<build>
 		<resources>
+
+			<resource>
+				<directory>src/main/resources</directory>
+				<filtering>true</filtering>
+				<excludes>
+					<exclude>**/*.jar</exclude>
+					<exclude>**/*.dll</exclude>
+					<exclude>**/*.so</exclude>
+					<exclude>**/*.bin</exclude>
+				</excludes>
+			</resource>
+			<!-- Copy binary files without filtering -->
+			<resource>
+				<directory>src/main/resources</directory>
+				<filtering>false</filtering>
+				<includes>
+					<include>**/*.jar</include>
+					<include>**/*.dll</include>
+					<include>**/*.so</include>
+					<include>**/*.bin</include>
+				</includes>
+			</resource>
 			<resource>
 				<directory>src/main/resources</directory>
 				<excludes>
@@ -207,8 +229,52 @@
 					<include>**/*</include>
 				</includes>
 			</resource>
+			<resource>
+				<directory>src/main/resources</directory>
+				<filtering>true</filtering>
+				<excludes>
+					<exclude>sklearn_weka_env/**</exclude>
+				</excludes>
+			</resource>
+			<!-- Copy sklearn_weka_env without processing -->
+			<resource>
+				<directory>src/main/resources</directory>
+				<filtering>false</filtering>
+				<includes>
+					<include>sklearn_weka_env/**</include>
+				</includes>
+			</resource>
 		</resources>
 		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-resources-plugin</artifactId>
+				<version>3.3.1</version>
+				<configuration>
+					<nonFilteredFileExtensions>
+						<nonFilteredFileExtension>pkl</nonFilteredFileExtension>
+						<nonFilteredFileExtension>model</nonFilteredFileExtension>
+						<nonFilteredFileExtension>bin</nonFilteredFileExtension>
+						<nonFilteredFileExtension>dat</nonFilteredFileExtension>
+						<nonFilteredFileExtension>jar</nonFilteredFileExtension>
+						<nonFilteredFileExtension>dll</nonFilteredFileExtension>
+						<nonFilteredFileExtension>so</nonFilteredFileExtension>
+					</nonFilteredFileExtensions>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>3.11.0</version>
+				<configuration>
+					<source>17</source>
+					<target>17</target>
+					<compilerArgs>
+						<arg>-J--add-opens=jdk.compiler/com.sun.tools.javac.processing=ALL-UNNAMED</arg>
+						<arg>-J--add-opens=jdk.compiler/com.sun.tools.javac.util=ALL-UNNAMED</arg>
+					</compilerArgs>
+				</configuration>
+			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-resources-plugin</artifactId>

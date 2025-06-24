@@ -1,36 +1,43 @@
-# Use OpenJDK 17 as base image
-FROM openjdk:17-jdk-slim
+FROM eclipse-temurin:17-jdk-alpine AS build
 
-# Set working directory
 WORKDIR /app
 
-# Copy Maven wrapper and pom.xml
+# Set Java module opens for Lombok compatibility
+ENV MAVEN_OPTS="--add-opens jdk.compiler/com.sun.tools.javac.processing=ALL-UNNAMED --add-opens jdk.compiler/com.sun.tools.javac.util=ALL-UNNAMED"
+
+# Copy Maven files
 COPY .mvn/ .mvn
 COPY mvnw pom.xml ./
 
-# Download dependencies (this layer will be cached if pom.xml doesn't change)
+# Make mvnw executable
+RUN chmod +x mvnw
+
+# Download dependencies
 RUN ./mvnw dependency:go-offline -B
 
 # Copy source code
 COPY src ./src
 
-# Build the application
+# Build the application with Lombok fixes
 RUN ./mvnw clean package -DskipTests
 
 # Create final image
-FROM openjdk:17-jre-slim
+FROM eclipse-temurin:17-jre-alpine
 
 WORKDIR /app
 
-# Copy the built JAR file
-COPY --from=0 /app/target/User-0.0.1-SNAPSHOT.jar app.jar
+# Install curl for health checks
+RUN apk add --no-cache curl
+
+# Copy the built jar
+COPY --from=build /app/target/*.jar app.jar
 
 # Expose port
 EXPOSE 8090
 
-# Add health check
-HEALTHCHECK --interval=30s --timeout=3s --start-period=60s --retries=3 \
+# Health check
+HEALTHCHECK --interval=30s --timeout=3s --start-period=40s --retries=3 \
   CMD curl -f http://localhost:8090/api/actuator/health || exit 1
 
-# Run the application
-ENTRYPOINT ["java", "-jar", "app.jar"]
+# Run the application with Lombok agent
+ENTRYPOINT ["java", "-javaagent:app.jar", "-jar", "app.jar"]

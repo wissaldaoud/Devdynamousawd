@@ -1,0 +1,98 @@
+# values.yaml
+global:
+  registry: ""
+  tag: "latest"
+  pullPolicy: "Always"
+
+namespace:
+  name: microservices
+
+mysql:
+  enabled: true
+  image:
+    repository: mysql
+    tag: "8.0"
+  database: "UserPI"
+  rootPassword: ""
+  persistence:
+    enabled: true
+    size: 10Gi
+  resources:
+    requests:
+      memory: "256Mi"
+      cpu: "250m"
+    limits:
+      memory: "512Mi"
+      cpu: "500m"
+
+configServer:
+  enabled: true
+  image:
+    repository: "config-server"
+  replicas: 1
+  port: 8888
+  resources:
+    requests:
+      memory: "256Mi"
+      cpu: "250m"
+    limits:
+      memory: "512Mi"
+      cpu: "500m"
+
+discoveryService:
+  enabled: true
+  image:
+    repository: "discovery-service"
+  replicas: 1
+  port: 8761
+  resources:
+    requests:
+      memory: "256Mi"
+      cpu: "250m"
+    limits:
+      memory: "512Mi"
+      cpu: "500m"
+
+userService:
+  enabled: true
+  image:
+    repository: "user-service"
+  replicas: 2
+  port: 8090
+  resources:
+    requests:
+      memory: "512Mi"
+      cpu: "500m"
+    limits:
+      memory: "1Gi"
+      cpu: "1000m"
+
+gatewayService:
+  enabled: true
+  image:
+    repository: "gateway-service"
+  replicas: 2
+  port: 8222
+  service:
+    type: LoadBalancer
+  ingress:
+    enabled: true
+    host: "localhost"
+  resources:
+    requests:
+      memory: "256Mi"
+      cpu: "250m"
+    limits:
+      memory: "512Mi"
+      cpu: "500m"
+
+monitoring:
+  prometheus:
+    enabled: true
+  grafana:
+    enabled: true
+    adminPassword: "admin"
+
+secrets:
+  jwtSecret: "Y6ThdM9XcJb35ZBYzLH7HhT7dwFDAJ0dUVZn7pa9JIE="
+  mailPassword: "qllhkpvchrzwpcze"

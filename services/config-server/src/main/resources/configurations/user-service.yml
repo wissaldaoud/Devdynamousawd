@@ -15,6 +15,13 @@ spring:
     properties:
       hibernate:
         format_sql: true
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: http://keycloak:8080/realms/microservices-realm
+          jwk-set-uri: http://keycloak:8080/realms/microservices-realm/protocol/openid-connect/certs
+
 
 
 
@@ -43,6 +50,17 @@ logging:
       saifeddine: DEBUG
 
 
+
+# Keycloak Admin Client Configuration
+keycloak:
+  realm: microservices-realm
+  auth-server-url: http://keycloak:8080
+  admin:
+    client-id: admin-cli
+    username: admin
+    password: admin
+
+
 eureka:
   client:
     register-with-eureka: true
@@ -58,3 +76,4 @@ app:
       - "Profil technique orienté Informatique et Data Science"
       - "Profil business orienté Finance et Marketing"
       - "Profil académique orienté Éducation et Recherche"
+

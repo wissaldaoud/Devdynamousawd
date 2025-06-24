@@ -12,6 +12,12 @@ spring:
             - Path=/api/**
   application:
     name: gateway-service
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: http://keycloak:8080/realms/microservices-realm
+          jwk-set-uri: http://keycloak:8080/realms/microservices-realm/protocol/openid-connect/certs
 
 eureka:
   client:
@@ -24,5 +30,10 @@ eureka:
 
 server:
   port: 8222
+
+logging:
+  level:
+    org.springframework.security: DEBUG
+    org.springframework.cloud.gateway: DEBUG
 
 

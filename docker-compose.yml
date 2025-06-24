@@ -1,6 +1,34 @@
 version: '3.8'
 
 services:
+  keycloak:
+    image: quay.io/keycloak/keycloak:22.0.1
+    container_name: keycloak
+    environment:
+      KEYCLOAK_ADMIN: admin
+      KEYCLOAK_ADMIN_PASSWORD: admin
+      KC_DB: mysql
+      KC_DB_URL: jdbc:mysql://mysql:3306/keycloak
+      KC_DB_USERNAME: root
+      KC_DB_PASSWORD: ""
+      KC_HOSTNAME: localhost
+      KC_HOSTNAME_PORT: 8080
+      KC_HOSTNAME_STRICT_HTTPS: false
+      KC_HTTP_ENABLED: true
+    ports:
+      - "8080:8080"
+    depends_on:
+      mysql:
+        condition: service_healthy
+    networks:
+      - microservices-network
+    command: start-dev
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://localhost:8080/realms/master" ]
+      interval: 30s
+      timeout: 10s
+      retries: 10
+      start_period: 60s
   # MySQL Database
   mysql:
     image: mysql:8.0
@@ -13,17 +41,20 @@ services:
       - "3306:3306"
     volumes:
       - mysql_data:/var/lib/mysql
+      - ./init-scripts:/docker-entrypoint-initdb.d  # Add this line
     networks:
       - microservices-network
     healthcheck:
       test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
       timeout: 20s
       retries: 10
+      interval: 30s
+      start_period: 40s
 
   # Config Server
   config-server:
     build:
-      context: ./config-server
+      context: ./services/config-server
       dockerfile: Dockerfile
     container_name: config-server
     ports:
@@ -42,7 +73,7 @@ services:
   # Discovery Service (Eureka)
   discovery-service:
     build:
-      context: ./discovery-service
+      context: ./services/discovery
       dockerfile: Dockerfile
     container_name: discovery-service
     ports:
@@ -65,7 +96,7 @@ services:
   # User Service
   user-service:
     build:
-      context: ./user-service
+      context: ./services/User
       dockerfile: Dockerfile
     container_name: user-service
     ports:
@@ -75,7 +106,16 @@ services:
       - SPRING_CLOUD_CONFIG_URI=http://config-server:8888
       - EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE=http://discovery-service:8761/eureka/
       - SPRING_DATASOURCE_URL=jdbc:mysql://mysql:3306/UserPI?createDatabaseIfNotExist=true&useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC
-      - JWT_SECRET=Y6ThdM9XcJb35ZBYzLH7HhT7dwFDAJ0dUVZn7pa9JIE=
+      - SPRING_DATASOURCE_USERNAME=root
+      - SPRING_DATASOURCE_PASSWORD=
+      - JWT_SECRET=${JWT_SECRET:-Y6ThdM9XcJb35ZBYzLH7HhT7dwFDAJ0dUVZn7pa9JIE=}
+      - SPRING_MAIL_USERNAME=${MAIL_USERNAME:-saifromdhani707@gmail.com}
+      - SPRING_MAIL_PASSWORD=${MAIL_PASSWORD:-dfswhascenogfexh}
+      - SPRING_MAIL_HOST=${SPRING_MAIL_HOST:-smtp.gmail.com}
+      - SPRING_MAIL_PORT=${SPRING_MAIL_PORT:-587}
+      - APP_MAIL_FROM=${APP_MAIL_FROM:-saifromdhani707@gmail.com}
+      - APP_FRONTEND_URL=${APP_FRONTEND_URL:-http://localhost:4200}
+      - APP_CORS_ALLOWED_ORIGINS=${APP_CORS_ALLOWED_ORIGINS:-http://localhost:4200}
     depends_on:
       mysql:
         condition: service_healthy
@@ -95,7 +135,7 @@ services:
   # Gateway Service
   gateway-service:
     build:
-      context: ./gateway-service
+      context: ./services/gateway
       dockerfile: Dockerfile
     container_name: gateway-service
     ports:
@@ -114,7 +154,7 @@ services:
     networks:
       - microservices-network
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8222/actuator/health"]
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:8222/actuator/health", "||", "exit", "1"]
       interval: 30s
       timeout: 10s
       retries: 5
